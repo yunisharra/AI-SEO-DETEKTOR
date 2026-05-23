@@ -1,0 +1,6 @@
+{
+  "name": "Panduan SEO & AI Optimizer",
+  "description": "Platform edukasi SEO lengkap interaktif dengan tips nulis artikel, optimasi landing page, backlink, dan fitur AI Auditor Artikel berbasis Gemini.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
