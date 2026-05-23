@@ -1,0 +1,58 @@
+# Alur kerja otomatis untuk mengompilasi React dan mengupload ke GitHub Pages
+name: Deploy SEO Detector to Pages
+
+on:
+  # Berjalan saat Anda push file ke branch main atau master
+  push:
+    branches: ["main", "master"]
+
+  # Mengizinkan Anda menjalankan workflow secara manual dari menu Actions di GitHub
+  workflow_dispatch:
+
+# Mengatur izin token GITHUB_TOKEN untuk mengizinkan deploy ke GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Mencegah tabrakan deplonment jika ada beberapa push bersamaan
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Pasang Node.js v20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Dependensi Website
+        run: npm install
+
+      - name: Build Aplikasi Web (Compile React & Tailwind CSS)
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Konfigurasi GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Berkas Hasil Build Ke Artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Hasil build kompilasi Vite berada di folder dist
+          path: './dist'
+
+      - name: Deploy menuju GitHub Pages Secara Otomatis
+        id: deployment
+        uses: actions/deploy-pages@v4
