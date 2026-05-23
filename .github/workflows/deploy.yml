@@ -2,20 +2,15 @@
 name: Deploy SEO Detector to Pages
 
 on:
-  # Berjalan saat Anda push file ke branch main atau master
   push:
     branches: ["main", "master"]
-
-  # Mengizinkan Anda menjalankan workflow secara manual dari menu Actions di GitHub
   workflow_dispatch:
 
-# Mengatur izin token GITHUB_TOKEN untuk mengizinkan deploy ke GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Mencegah tabrakan deplonment jika ada beberapa push bersamaan
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -34,10 +29,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
       - name: Install Dependensi Website
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build Aplikasi Web (Compile React & Tailwind CSS)
         run: npm run build
@@ -50,7 +44,6 @@ jobs:
       - name: Upload Berkas Hasil Build Ke Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          # Hasil build kompilasi Vite berada di folder dist
           path: './dist'
 
       - name: Deploy menuju GitHub Pages Secara Otomatis
